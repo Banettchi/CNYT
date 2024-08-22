@@ -1,130 +1,96 @@
-from math import pi as pi
-
-from math import atan2 as arctan
-
-global e
-
-e = 2.718281828459045
+import math
 
 def Suma(n1, n2):
     """
-    Arg n1: Primer número complejo
-    Arg n2: Segundo número complejo
-    Return: Número complejo resultante
+    Arg n1: Primera coordenada cartesiana
+    Arg n2: Segunda coordenada cartesiana
+    Return: Coordenada cartesiana resultante de la suma
     """
-    real1, imaginario1 = n1[0], n1[1]
-    real2, imaginario2 = n2[0], n2[1]
-    real3 = real1 + real2
-    imaginario3 = imaginario1 + imaginario2
-    return [real3, imaginario3]
+    pr = round(n1[0] + n2[0], 2)
+    pi = round(n1[1] + n2[1], 2)
+    return pr, pi
 
 def Producto(n1, n2):
     """
-    Arg n1: Primer número complejo
-    Arg n2: Segundo número complejo
-    Return: Número complejo resultante
+    Arg n1: Primera coordenada cartesiana
+    Arg n2: Segunda coordenada cartesiana
+    Return: Coordenada cartesiana resultante del producto
     """
-    real1, imaginario1 = n1[0], n1[1]
-    real2, imaginario2 = n2[0], n2[1]
-    real3 = (real1 * real2) - (imaginario1 * imaginario2)
-    imaginario3 = (real1 * imaginario2) + (real2 * imaginario1)
-    return [real3, imaginario3]
+    pr = round(n1[0]*n2[0] - n1[1]*n2[1], 2)
+    pi = round(n1[0]*n2[1] + n2[0]*n1[1], 2)
+    return pr, pi
 
 def Resta(n1, n2):
     """
-    Arg n1: Primer número complejo
-    Arg n2: Segundo número complejo
-    Return: Número complejo resultante
+    Arg n1: Primera coordenada cartesiana
+    Arg n2: Segunda coordenada cartesiana
+    Return: Coordenada cartesiana resultante de la resta
     """
-    real1, imaginario1 = n1[0], n1[1]
-    real2, imaginario2 = n2[0], n2[1]
-    real3 = real1 - real2
-    imaginario3 = imaginario1 - imaginario2
-    return [real3, imaginario3]
+    pr = round(n1[0] - n2[0], 2)
+    pi = round(n1[1] - n2[1], 2)
+    return pr, pi
 
 def Division(n1, n2):
     """
-    Arg n1: Primer número complejo
-    Arg n2: Segundo número complejo
-    Return: Número complejo resultante
+    Arg n1: Numerador en coordenadas cartesianas
+    Arg n2: Denominador en coordenadas cartesianas
+    Return: Coordenada cartesiana resultante de la división
     """
-    real1, imaginario1 = n1[0], n1[1]
-    real2, imaginario2 = n2[0], n2[1]
-    piv = (real2**2) + (imaginario2**2)
-    real3, imaginario3 = 0, 0
-    try:
-        real3 = ((real1 * real2) + (imaginario1 * imaginario2)) / piv
-        imaginario3 = ((real2 * imaginario1) - (real1 * imaginario2)) / piv
-        return [real3, imaginario3]
-    except ZeroDivisionError as error:
-        print("Error:", error)
+    denominator = n2[0]**2 + n2[1]**2
+    if denominator == 0:
+        raise ZeroDivisionError("Division by zero is not allowed")
+    pr = round((n1[0]*n2[0] + n1[1]*n2[1]) / denominator, 2)
+    pi = round((n2[0]*n1[1] - n1[0]*n2[1]) / denominator, 2)
+    return pr, pi
 
 def Modulo(n):
     """
-    Arg n: Número complejo
-    Return c: Valor del módulo del número
+    Arg n: Coordenada cartesiana
+    Return: Módulo de la coordenada cartesiana
     """
-    real, imaginario = n[0], n[1]
-    real = real**2
-    imaginario = imaginario**2
-    c = (real + imaginario)**(1/2)
-    
-    return c
+    num = round((n[0]**2 + n[1]**2)**0.5, 2)
+    return num
 
 def Conjugado(n):
     """
-    Arg n: Número complejo
-    Return: Conjugado
+    Arg n: Coordenada cartesiana
+    Return: Conjugado de la coordenada cartesiana
     """
-    return [n[0], -n[1]]
+    return round(n[0], 2), round(n[1] * -1, 2)
 
-def Sen(x):
+def Fase(n):
     """
-    Arg x: En radianes, el número del que se desea hallar el seno
-    Return s: Seno de x
+    Arg n: Coordenada cartesiana
+    Return: Fase de la coordenada cartesiana
     """
-    global e
-    s = (e**(x*1j)).imag
-    return s
-
-def Cos(x):
-    """
-    Arg x: En radianes, el número del que se desea hallar el coseno
-    Return c: Coseno de x
-    """
-    global e
-    c = (e**(x*1j)).real
-    return c
+    if n[1] == 0:
+        if n[0] > 0:
+            angle = 0
+        elif n[0] < 0:
+            angle = math.pi
+        else:
+            raise ZeroDivisionError("Division by zero is not allowed")
+    elif n[0] == 0:
+        angle = math.pi/2 if n[1] > 0 else -math.pi/2
+    else:
+        angle = round(math.atan(n[1]/n[0]), 2)
+    return angle
 
 def Polar_Car(coord):
-    """
-    Arg coord: Coordenadas polares
-    Return: Coordenada cartesiana
-    """
-    r, t = coord[0], coord[1]
-    x = r * (Cos(t))
-    y = r * (Sen(t))
-    return [x, y]
-
-def Car_Polar(coord):
     """
     Arg coord: Coordenada cartesiana
     Return: Coordenada polar
     """
-    x, y = coord[0], coord[1]
-    r = ((x**2) + (y**2))**(1/2)
-    t = Fase([x, y])
-    return [r, t]
+    pr = round(Modulo(coord), 2)
+    pi = round(Fase(coord), 2)
+    return pr, pi
 
-def Fase(n):
+def Car_Polar(coord):
     """
-    Arg n: Número complejo
-    Return f: Fase del número
+    Arg coord: Coordenada polar
+    Return: Coordenada cartesiana
     """
-    real, imaginario = n[0], n[1]
-    f = arctan(imaginario, real)
-    if real < 0:
-        f += pi
-    elif real >= 0 and imaginario < 0:
-        f += 2 * pi
-    return f
+    pr = round(coord[0] * math.cos(coord[1]), 2)
+    pi = round(coord[0] * math.sin(coord[1]), 2)
+    return pr, pi
+
